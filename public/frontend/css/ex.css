@@ -1,0 +1,19 @@
+.home-header{
+    position: fixed; 
+    top: 0; 
+    padding-top: 5px;
+    height: 60px;
+    width: 100%; 
+    font-size: 40px;
+    background-color: green; 
+    color: white; 
+    text-align: center;
+}
+.copyright {
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    background-color: green; 
+    color: white; 
+    text-align: center;
+}

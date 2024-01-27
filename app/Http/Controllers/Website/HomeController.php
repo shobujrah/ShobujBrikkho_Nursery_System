@@ -21,11 +21,11 @@ class HomeController extends Controller
 {
     public function home()
     {
-     
+
         // $categories= Category::all();
 
         $allProducts=Product::latest()->take(9)->get();
-      return view('frontend.pages.home',compact('allProducts'));  
+      return view('frontend.pages.home',compact('allProducts'));
       // ,compact('categories'));
     }
 
@@ -50,19 +50,19 @@ class HomeController extends Controller
             'name'=>'required',
             'email'=>'required',
             'message'=>'required'
-            
-            
+
+
         ]);
 
 
         Contact::create([
-            
+
              'name'=>$request->name,
              'email'=>$request->email,
             'message'=>$request->message,
 
          ]);
-         
+
          Toastr::success('Contact us Message Delivered Successfull.');
          return redirect()->route('contact')->with('msg','Contact us Message Delivered Successfull');
     }
@@ -87,17 +87,17 @@ class HomeController extends Controller
 
       $products=Product::where('name','LIKE','%'.$searchKey.'%')->get();
 
-     
+
       return view('frontend.pages.search-product',compact('products','searchKey'));
 
 
-      
+
     }
 
-    public function registration() 
+    public function registration()
     {
-      
-      return view('frontend.pages.registration');  
+
+      return view('frontend.pages.registration');
     }
 
     public function myorder($id)
@@ -105,7 +105,7 @@ class HomeController extends Controller
       // dd($id);
       $orders=order::where('customer_id',$id)->get();
       // dd($orders);
-      return view('frontend.pages.myorder', compact('orders')); 
+      return view('frontend.pages.myorder', compact('orders'));
     }
 
 
@@ -114,19 +114,19 @@ class HomeController extends Controller
       // dd($id);
       $order_items=OrderDetail::with('product')->where('order_id',$id)->get();
       // dd($orders);
-      return view('frontend.pages.orderview', compact('order_items')); 
+      return view('frontend.pages.orderview', compact('order_items'));
     }
 
 
-    public function login() 
+    public function login()
     {
-      return view('frontend.pages.login');  
+      return view('frontend.pages.login');
     }
 
 
-    public function profile() 
+    public function profile()
     {
-      return view('frontend.pages.profile');  
+      return view('frontend.pages.profile');
     }
 
     public function customerEdit()
@@ -136,8 +136,8 @@ class HomeController extends Controller
 
    public function customerUpdate(Request $request,$id)
     {
-     
-            $customer=Customer::find($id); 
+
+            $customer=Customer::find($id);
 
             $fileName=$customer->image;
             if($request->hasFile('image'))
@@ -157,7 +157,7 @@ class HomeController extends Controller
             ]);
         Toastr::success('Successfully Updated .', 'Customer Profile', ['options']);
         return redirect()->route('customer.profile');
-    } 
+    }
 
 
 
@@ -168,14 +168,14 @@ class HomeController extends Controller
     {
       // if(session()->has('cart'))//check session has cart
       // {
-      // 
+      //
 // dd(request()->all());
 // dd(request());
         request()->validate([
           'quantity'=>'required|min:1',
         ]);
 
-        $cart=session()->get('cart'); 
+        $cart=session()->get('cart');
         $product=Product::find($id);
 
 
@@ -195,14 +195,14 @@ class HomeController extends Controller
 
 
 
-          
+
 
        if(empty($cart))
        {
-       
+
         //cart empty
         //add product to cart
-        
+
 
         //add product to cart
         $newCart[$id]=[
@@ -227,7 +227,7 @@ class HomeController extends Controller
           $cart[$id]['quantity']=$cart[$id]['quantity'] + 1 ;
           $cart[$id]['sub_total']=$cart[$id]['quantity'] * $cart[$id]['price'];
           session()->put('cart',$cart);
-          
+
         }else{
           // dd("product not exist");
 
@@ -235,14 +235,14 @@ class HomeController extends Controller
             'name'=>$product->name,
             'image'=>$product->image,
             'price'=>$product->price,
-            'quantity'=>1,
-            'sub_total'=>$product->price * 1
+            'quantity'=>request()->quantity,
+            'sub_total'=>$product->price * (int)request()->quantity 
           ];
 
           session()->put('cart',$cart);
 
         }
-        
+
 
        }
 
@@ -251,7 +251,7 @@ class HomeController extends Controller
         Toastr::warning('Out of stock.','product');
       }
 
-      
+
       Toastr::success('Product added to cart.');
        return redirect()->back()->with('msg','Product added to cart.');
 
@@ -259,13 +259,13 @@ class HomeController extends Controller
     }
 
 
-    public function cartView() 
+    public function cartView()
     {
       $myCart=session()->get('cart');
 
       // dd($myCart);
       return view('frontend.pages.cart',compact('myCart'));
-      
+
     }
 
 
@@ -279,14 +279,14 @@ class HomeController extends Controller
     //  dd($cart);
     session()->put('cart',$cart);
     return redirect()->back();
-     
-     
+
+
     }
 
 
     public function clearCart()
     {
-      
+
       session()->forget('cart');
 
       Toastr::success('Cart clear.');
@@ -297,10 +297,10 @@ class HomeController extends Controller
 
     public function checkout() {
 
-      
+
       return view('frontend.pages.checkout');
-     
-      
+
+
     }
 
 
@@ -313,11 +313,11 @@ public function placeOrder(Request $request){
       $myCart=session()->get('cart');
 
       session()->forget('cart');
-      
+
       // dd($myCart);//
 
       // dd($request->all());
-      
+
       try
       {
         DB::beginTransaction();
@@ -332,12 +332,12 @@ public function placeOrder(Request $request){
             'total'=>array_sum(array_column($myCart,'sub_total')),
             'payment_status'=>'pending',
           ]);
-  
-  
+
+
           //order details create
           foreach($myCart as $key=>$cart)
           {
-            
+
             OrderDetail::create([
               'order_id'=>$order->id,
               'product_id'=>$key,
@@ -350,9 +350,9 @@ public function placeOrder(Request $request){
             $product->decrement('quantity',$cart['quantity']);
 
 
-            
 
-            
+
+
           }
 
           DB::commit();
@@ -361,7 +361,7 @@ public function placeOrder(Request $request){
 
             if($request->paymentMethod == 'ssl')
                       {
-                        
+
                         // redirect to payment page
                         $this->payNow($order);
                       }
@@ -382,7 +382,7 @@ public function placeOrder(Request $request){
 
     public function payNow($orderData)
     {
-     
+
         $post_data = array();
         $post_data['total_amount'] = $orderData->total; # You cant not pay less than 10
         $post_data['currency'] = "BDT";
@@ -421,7 +421,7 @@ public function placeOrder(Request $request){
         $post_data['value_c'] = "ref003";
         $post_data['value_d'] = "ref004";
 
-     
+
 
         $sslc = new SslCommerzNotification();
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
@@ -432,5 +432,5 @@ public function placeOrder(Request $request){
             $payment_options = array();
         }
     }
-    
+
 }

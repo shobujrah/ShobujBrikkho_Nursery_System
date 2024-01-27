@@ -131,7 +131,7 @@ Route::group(['prefix'=>'admin','middleware'=>'auth'],function(){
             Route::get('/product-create-form', [ProductController::class, 'form'])->name('product.create.form');
             Route::post('/product-store', [ProductController::class, 'store'])->name('product.store');
 
-            Route::get('/customer-details', [UserdetailsController::class, 'customerlist'])->name('customer.list'); 
+            Route::get('/customer-details', [UserdetailsController::class, 'customerlist'])->name('customer.list');
 
             Route::get('/orders',[OrderController::class,'list'])->name('order.list');
             Route::get('/orders/view/{id}',[OrderController::class,'view'])->name('order.view');
@@ -140,18 +140,18 @@ Route::group(['prefix'=>'admin','middleware'=>'auth'],function(){
             Route::get('/employee',[EmployeeController::class,'list'])->name('employee.list');
             // Route::get('/delivery/order/assign',[EmployeeController::class,'assign'])->name('delivery.order.assign.list');
             // Route::get('/delivery-create-form', [EmployeeController::class, 'delivery'])->name('delivery.create.form');
-            
+
 
             Route::get('/employee/view/{id}',[EmployeeController::class,'view'])->name('employee.view');
             Route::get('/employee/edit/{id}',[EmployeeController::class,'edit'])->name('employee.edit');
             Route::put('/employee/update/{id}',[EmployeeController::class,'update'])->name('employee.update');
             Route::get('/employee/delete/{id}',[EmployeeController::class,'delete'])->name('employee.delete');
-            
+
             Route::get('/employee-add-form',[EmployeeController::class, 'form'])->name('employee.add.form');
             Route::post('/employee-store',[EmployeeController::class, 'store'])->name('employee.store');
 
             Route::get('/contact-us-info',[ContactController::class,'contact'])->name('contact.us.info');
-            
+
             Route::get('/product/report',[ProductController::class,'report'])->name('product.report');
             Route::get('/product/report/search',[ProductController::class, 'reportSearch'])->name('product.report.search');
 

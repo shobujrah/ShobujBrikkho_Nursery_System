@@ -14,33 +14,33 @@
             <span class="badge badge-secondary badge-pill"> {{session()->has('cart')?count(session()->get('cart')):0}}</span>
           </h4>
           <ul class="list-group mb-3">
-            
+
 
         @if(session()->has('cart'))
           @foreach(session()->get('cart') as $cart)
           <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
                 <h6 class="my-0">{{$cart['name']}}</h6>
-                
+
               </div>
               <span class="text-muted">{{$cart['price']}} BDT</span>
             </li>
             @endforeach
         @endif
-            
 
-            
+
+
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (BDT)</span>
               <strong>{{session()->has('cart') ? array_sum(array_column(session()->get('cart'),'sub_total')):0}}</strong>
             </li>
           </ul>
 
-          
+
         </div>
         <div class="col-md-8 order-md-1">
           <h4 class="mb-3">Billing address</h4>
-          
+
           <form class="needs-validation" action="{{route('place.order')}}" method="post" >
             @csrf
             <div class="row">
@@ -85,9 +85,9 @@
               </div>
             </div>
 
-            
 
-           
+
+
             <hr class="mb-4">
 
             <h4 class="mb-3">Payment</h4>
@@ -101,19 +101,19 @@
                 <input value="cod" id="debit" name="paymentMethod" type="radio" class="custom-control-input" required>
                 <label class="custom-control-label" for="debit">COD</label>
               </div>
-              
+
             </div>
-          
+
             <hr class="mb-4">
             <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
           </form>
 
-        
+
 
         </div>
       </div>
 
-      
+
     </div>
 
 @endsection
